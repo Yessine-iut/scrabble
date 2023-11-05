@@ -1,0 +1,66 @@
+version: '3.4'
+
+services:
+
+  partie:
+    container_name: partie
+    image: img-partie
+    build: partie
+    ports:
+      - "8081:8081"
+    networks:
+      ntw_scrabblid:
+        aliases:
+          - partie
+        ipv4_address: 172.128.0.81
+
+  anagrammeur:
+    container_name: anagrammeur
+    image: img-anagrammeur
+    build: anagrammeur
+    depends_on:
+     - partie
+    ports:
+      - "8084:8084"
+    networks:
+      ntw_scrabblid:
+        aliases:
+          - anagrammeur
+        ipv4_address: 172.128.0.84
+
+  joueur:
+    container_name: joueur
+    image: img-joueur
+    build: joueur
+    depends_on:
+      - anagrammeur
+    ports:
+      - "8082:8082"
+    networks:
+      ntw_scrabblid:
+        aliases:
+          - joueur
+        ipv4_address: 172.128.0.82
+
+  appariement:
+    container_name: appariement
+    image: img-appariement
+    build: appariement
+    depends_on:
+      - partie
+      - joueur
+      - anagrammeur
+    ports:
+      - "8083:8083"
+    networks:
+      ntw_scrabblid:
+        aliases:
+          - appariement
+        ipv4_address: 172.128.0.83
+
+networks:
+    ntw_scrabblid:
+      ipam:
+        driver: default
+        config:
+          - subnet: 172.128.0.0/16

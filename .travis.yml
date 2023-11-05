@@ -1,0 +1,19 @@
+language: java
+jdk:
+  - openjdk11
+env:
+
+cache:
+  directories:
+    - $HOME/.m2
+
+services:
+  - docker
+
+install:
+  - mvn clean install -DskipTests
+
+script:
+  - mvn integration-test
+  - docker-compose build
+  - docker-compose up
